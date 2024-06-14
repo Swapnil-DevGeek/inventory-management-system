@@ -268,7 +268,7 @@ const InventoryManagement = () => {
         <div className="modal-content">
           <h2 className="text-xl font-bold mb-4">Confirm Deletion</h2>
           {itemToDelete && (
-            <p>Are you sure you want to delete the item {itemToDelete.name}?</p>
+            <p>Are you sure you want to delete the item "{itemToDelete.name}"?</p>
           )}
           <div className="flex justify-center items-center gap-4 mt-4">
             <button onClick={deleteItem} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
