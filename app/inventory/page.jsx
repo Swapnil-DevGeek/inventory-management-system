@@ -131,7 +131,7 @@ const InventoryManagement = () => {
   const deleteItem = () => {
     setItems(items.filter(item => item.id !== itemToDelete.id));
     closeDeleteModal();
-    toast.error('Item deleted successfully', { position: 'top-right' });
+    toast.success('Item deleted successfully', { position: 'top-right' });
   };
 
     // Pagination
