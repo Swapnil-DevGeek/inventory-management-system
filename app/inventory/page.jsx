@@ -5,6 +5,8 @@ import { data } from '../../data';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Modal.setAppElement('#__next');  // Add this line to set the app element for accessibility
+
 const customStyles = {
   content: {
     top: '50%',
@@ -28,8 +30,7 @@ const customStyles = {
 };
 
 const InventoryManagement = () => {
-  const initialItems = JSON.parse(localStorage.getItem('items')) || data.items;
-  const [items, setItems] = useState(initialItems);
+  const [items, setItems] = useState([]);
   const [stockFilter, setStockFilter] = useState('All');
   const [newItemName, setNewItemName] = useState('');
   const [newItemStock, setNewItemStock] = useState('');
@@ -42,6 +43,11 @@ const InventoryManagement = () => {
   const [editItemStock, setEditItemStock] = useState('');
   const [errors, setErrors] = useState({ name: '', stock: '' });
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const initialItems = JSON.parse(localStorage.getItem('items')) || data.items;
+    setItems(initialItems);
+  }, []);
 
   const filteredItems = items.filter(item => {
     const matchesStockFilter =
@@ -273,9 +279,7 @@ const InventoryManagement = () => {
       >
         <div className="modal-content">
           <h2 className="text-xl font-bold mb-4">Confirm Deletion</h2>
-          {itemToDelete && (
-            <p>Are you sure you want to delete the item "{itemToDelete.name}"?</p>
-          )}
+          <p>Are you sure you want to delete this item?</p>
           <div className="flex justify-center items-center gap-4 mt-4">
             <button onClick={deleteItem} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
             <button onClick={closeDeleteModal} className="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
@@ -308,7 +312,7 @@ const InventoryManagement = () => {
           />
           {errors.stock && <p className="text-red-500 mb-2">{errors.stock}</p>}
           <div className="flex justify-center items-center gap-4 mt-4">
-            <button onClick={editItem} className="bg-green-500 text-white px-4 py-2 rounded">Save</button>
+            <button onClick={editItem} className="bg-green-500 text-white px-4 py-2 rounded">Save Changes</button>
             <button onClick={closeEditModal} className="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
           </div>
         </div>
