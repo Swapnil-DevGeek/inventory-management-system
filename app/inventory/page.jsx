@@ -1,11 +1,10 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { data } from '../../data';
-import { ToastContainer,toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Apply inline styles if you prefer not using a separate CSS file
 const customStyles = {
   content: {
     top: '50%',
@@ -29,7 +28,8 @@ const customStyles = {
 };
 
 const InventoryManagement = () => {
-  const [items, setItems] = useState(data.items);
+  const initialItems = JSON.parse(localStorage.getItem('items')) || data.items;
+  const [items, setItems] = useState(initialItems);
   const [stockFilter, setStockFilter] = useState('All');
   const [newItemName, setNewItemName] = useState('');
   const [newItemStock, setNewItemStock] = useState('');
@@ -49,7 +49,11 @@ const InventoryManagement = () => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesStockFilter && matchesSearch;
   });
-  
+
+  const setItemsAndLocalStorage = (updatedItems) => {
+    setItems(updatedItems);
+    localStorage.setItem('items', JSON.stringify(updatedItems));
+  };
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -100,7 +104,8 @@ const InventoryManagement = () => {
       name: newItemName,
       stock: parseInt(newItemStock, 10)
     };
-    setItems([...items, newItem]);
+    const updatedItems = [...items, newItem];
+    setItemsAndLocalStorage(updatedItems);
     setNewItemName('');
     setNewItemStock('');
     closeModal();
@@ -123,91 +128,92 @@ const InventoryManagement = () => {
         ? { ...item, name: editItemName, stock: parseInt(editItemStock, 10) }
         : item
     );
-    setItems(updatedItems);
+    setItemsAndLocalStorage(updatedItems);
     closeEditModal();
     toast.success('Item updated successfully', { position: 'top-right' });
   };
 
   const deleteItem = () => {
-    setItems(items.filter(item => item.id !== itemToDelete.id));
+    const updatedItems = items.filter(item => item.id !== itemToDelete.id);
+    setItemsAndLocalStorage(updatedItems);
     closeDeleteModal();
     toast.success('Item deleted successfully', { position: 'top-right' });
   };
 
-    // Pagination
-    const itemsPerPage = 10;
-    const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+  // Pagination
+  const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <div className="container mx-auto p-4">
-    <ToastContainer />
-    <h1 className="text-2xl font-bold mb-4">Inventory Management</h1>
-    <div className="mb-4 flex md:flex-row md:justify-between md:items-center flex-col ">
+      <ToastContainer />
+      <h1 className="text-2xl font-bold mb-4">Inventory Management</h1>
+      <div className="mb-4 flex md:flex-row md:justify-between md:items-center flex-col ">
 
-      <div className=' flex md:flex-row md:items-center flex-col md:gap-12'>
+        <div className=' flex md:flex-row md:items-center flex-col md:gap-12'>
 
-      <div className="relative">
-          <input
-            type="text"
-            placeholder="Search by name"
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-            className="border p-2 rounded bg-white w-64 pl-8"
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 absolute top-2 left-2 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M15.5 15.5l5.5 5.5"
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search by name"
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="border p-2 rounded bg-white w-64 pl-8"
             />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M17 17l5.5 5.5M15.5 15.5a6 6 0 1 1-8.5-8.5 6 6 0 0 1 8.5 8.5z"
-            />
-          </svg>
-      </div>
-
-      <div className="flex items-center p-2">
-        <label className="mr-2 font-medium">Filter by stock:</label>
-        <select
-          onChange={(e) => setStockFilter(e.target.value)}
-          value={stockFilter}
-          className="border p-2 rounded bg-white"
-        >
-          <option value="All">All</option>
-          <option value="In Stock">In Stock</option>
-          <option value="Out of Stock">Out of Stock</option>
-        </select>
-      </div>
-
-      </div>
-      <button onClick={openModal} className="w-32 bg-blue-500 text-white px-4 py-2 rounded">Add Item</button>
-    </div>
-    <ul>
-      {currentItems.map(item => (
-        <li key={item.id} className="mb-4 p-4 border rounded hover:shadow-lg transition-shadow duration-200">
-          <p className="font-medium">Name: {item.name}</p>
-          <p>Stock: {item.stock}</p>
-          <div className="flex gap-2 mt-2">
-            <button onClick={() => openEditModal(item)} className="bg-yellow-500 text-white px-4 py-2 rounded">Edit</button>
-            <button onClick={() => openDeleteModal(item)} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 absolute top-2 left-2 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M15.5 15.5l5.5 5.5"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M17 17l5.5 5.5M15.5 15.5a6 6 0 1 1-8.5-8.5 6 6 0 0 1 8.5 8.5z"
+              />
+            </svg>
           </div>
-        </li>
-      ))}
-    </ul>
+
+          <div className="flex items-center p-2">
+            <label className="mr-2 font-medium">Filter by stock:</label>
+            <select
+              onChange={(e) => setStockFilter(e.target.value)}
+              value={stockFilter}
+              className="border p-2 rounded bg-white"
+            >
+              <option value="All">All</option>
+              <option value="In Stock">In Stock</option>
+              <option value="Out of Stock">Out of Stock</option>
+            </select>
+          </div>
+
+        </div>
+        <button onClick={openModal} className="w-32 bg-blue-500 text-white px-4 py-2 rounded">Add Item</button>
+      </div>
+      <ul>
+        {currentItems.map(item => (
+          <li key={item.id} className="mb-4 p-4 border rounded hover:shadow-lg transition-shadow duration-200">
+            <p className="font-medium">Name: {item.name}</p>
+            <p>Stock: {item.stock}</p>
+            <div className="flex gap-2 mt-2">
+              <button onClick={() => openEditModal(item)} className="bg-yellow-500 text-white px-4 py-2 rounded">Edit</button>
+              <button onClick={() => openDeleteModal(item)} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
+            </div>
+          </li>
+        ))}
+      </ul>
 
       {/* Pagination controls */}
       <div className="flex justify-center mt-4">
@@ -227,7 +233,7 @@ const InventoryManagement = () => {
           Next
         </button>
       </div>
-  
+
       {/* Modal for adding new item */}
       <Modal
         isOpen={modalIsOpen}

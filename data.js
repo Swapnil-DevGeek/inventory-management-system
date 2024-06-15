@@ -26,3 +26,7 @@ export const data = {
     ]
   };
   
+export function initializeLocalStorage() {
+  localStorage.setItem('orders', JSON.stringify(data.orders));
+  localStorage.setItem('items', JSON.stringify(data.items));
+}
