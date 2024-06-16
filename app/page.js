@@ -1,8 +1,9 @@
 "use client";
 import { initializeLocalStorage } from "@/data";
 import { useEffect } from "react"
+import Home from "@/components/Home";
 
-export default function Home() {
+export default function Page() {
 
   useEffect(() => {
     // Initialize localStorage only if it hasn't been initialized before
@@ -16,7 +17,7 @@ export default function Home() {
   return (
 
     <>
-      Inventory management
+      <Home/>
     </>
   );
 }
