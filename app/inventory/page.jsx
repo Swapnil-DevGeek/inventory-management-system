@@ -209,16 +209,18 @@ const InventoryManagement = () => {
         <button onClick={openModal} className="w-32 bg-blue-500 text-white px-4 py-2 rounded">Add Item</button>
       </div>
       <ul>
-        {currentItems.map(item => (
-          <li key={item.id} className="mb-4 p-4 border rounded hover:shadow-lg transition-shadow duration-200">
-            <p className="font-medium">Name: {item.name}</p>
-            <p>Stock: {item.stock}</p>
-            <div className="flex gap-2 mt-2">
-              <button onClick={() => openEditModal(item)} className="bg-yellow-500 text-white px-4 py-2 rounded">Edit</button>
-              <button onClick={() => openDeleteModal(item)} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
-            </div>
-          </li>
-        ))}
+        {currentItems.length === 0 ? (<div className='text-center mt-12 mb-28 text-2xl text-gray-600'>No Items to show</div>)
+          : (currentItems.map(item => (
+            <li key={item.id} className="mb-4 p-4 border rounded hover:shadow-lg transition-shadow duration-200">
+              <p className="font-medium">Name: {item.name}</p>
+              <p>Stock: {item.stock}</p>
+              <div className="flex gap-2 mt-2">
+                <button onClick={() => openEditModal(item)} className="bg-yellow-500 text-white px-4 py-2 rounded">Edit</button>
+                <button onClick={() => openDeleteModal(item)} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
+              </div>
+            </li>
+          )))  
+      }
       </ul>
 
       {/* Pagination controls */}
