@@ -46,17 +46,21 @@ const OrderList = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Orders</h1>
 
+      <div className='flex flex-col lg:flex lg:flex-row lg:items-center gap-4 mb-8'>
+
       <OrderSearchFilter
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
       />
 
       <OrderSorting
         sortField={sortField}
         setSortField={setSortField}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
       />
+
+      </div>
 
       <ul>
         {currentOrders.map(order => (
