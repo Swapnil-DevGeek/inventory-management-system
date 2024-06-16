@@ -26,6 +26,9 @@ A live version of the project is deployed on Vercel and can be accessed [here](h
    - Provides functionality to add new items to the inventory.
    - Supports editing and deleting items from the inventory.
 
+4. **Dashboard**
+   - Displays statistics such as total items and orders.
+
 ### Design Choices and Implementation Details
 
 #### Design Choices
