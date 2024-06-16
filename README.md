@@ -1,37 +1,100 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Inventory and Manufacturing Management System
+
+This project is a simplified version of an inventory and manufacturing unit management system focused on an order system. It is built using React and Next.js, with extensive use of array and object manipulation, filtering, and mapping, along with design logic implemented using Tailwind CSS.
+
+## Live Demo
+
+A live version of the project is deployed on Vercel and can be accessed [here](https://inventory-management-system-livid.vercel.app/).
+
+## Project Overview
+
+### Features
+
+1. **Order List Page**
+   - Displays a list of orders with ID, customer name, status, and item count.
+   - Allows filtering orders by status (Pending, Completed).
+   - Supports sorting orders by customer name and item count.
+
+2. **Order Details Page**
+   - Shows detailed information about a specific order.
+   - Displays items in the order, their quantities, and stock availability.
+   - Implements a button to mark the order as completed, updating the status.
+
+3. **Inventory Management**
+   - Lists all items with their respective stock levels.
+   - Allows filtering items by stock availability (In stock, Out of stock).
+   - Provides functionality to add new items to the inventory.
+   - Supports editing and deleting items from the inventory.
+
+### Design Choices and Implementation Details
+
+#### Design Choices
+
+##### Framework and Libraries
+
+- **Next.js:** Chosen for its server-side rendering capabilities, which enhances performance and SEO.
+
+- **React:** Used for building interactive user interfaces with its component-based architecture, making it easier to manage state and UI elements.
+
+- **Tailwind CSS:** Selected for its utility-first approach, allowing rapid styling without writing custom CSS. This results in a consistent design system and responsive layout across devices.
+
+##### User Experience (UX) and Accessibility
+
+- **Responsive Design:** Tailwind CSS classes were utilized to ensure the application is responsive on various screen sizes, enhancing usability on both desktop and mobile devices.
+
+##### Component Design
+
+- **Reusable Components:** Components were designed to be reusable and composable, following React's best practices. This approach improves maintainability and reduces redundancy in the codebase.
+
+- **Modals and Notifications:** Used for displaying contextual information and user actions without disrupting the main flow of the application. Modals were implemented using React portals for better separation of concerns.
+
+#### Implementation Details
+
+##### Array and Object Manipulations
+
+- **Filtering Orders and Items:** JavaScript array methods such as `filter()` were used to implement functionalities like filtering orders by status (Pending, Completed) and filtering items by stock availability (In stock, Out of stock). These methods allow for efficient data manipulation without mutating the original arrays.
+
+- **Sorting Orders:** The `sort()` method was utilized to enable sorting orders by customer name and item count. Custom comparator functions were implemented to define sorting criteria based on specific object properties.
+
+- **Updating Order Status:** When marking an order as completed, the application updates the status of the order in the orders array using array manipulation techniques like finding the index of the order and updating its status property.
+
+- **Adding, Editing, and Deleting Items:** Object manipulation techniques such as spreading (`...`) and object destructuring were employed to add new items to the inventory, edit existing item details, and delete items from the inventory array. These operations ensure data integrity and provide a seamless user experience.
+
+##### State Management
+
+- **Local Storage:** Used to persist the state of orders and inventory between page reloads. This ensures that user data remains intact even after the browser is closed or refreshed.
+
+##### Performance Considerations
+
+- **Pagination:** Implemented on the order list and inventory list to optimize performance when handling large datasets. Pagination reduces the initial load time and improves the overall responsiveness of the application.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js installed on your local development machine.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+1. Clone the repository:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+    ```bash
+    git clone <repository_url>
+   
+2. Navigate into the project directory:
 
-## Learn More
+    ```bash
+    cd <project_directory>
 
-To learn more about Next.js, take a look at the following resources:
+3. Install dependencies:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    ```bash
+    npm install
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Running the Application
 
-## Deploy on Vercel
+1. Start the development server:
+    ```bash
+    npm run dev
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# inventory-management-system
+2. Open your browser and navigate to http://localhost:3000 to view the application. 
