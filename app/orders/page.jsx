@@ -63,9 +63,10 @@ const OrderList = () => {
       </div>
 
       <ul>
-        {currentOrders.map(order => (
+        {currentOrders.length === 0 ? <div className='text-center mt-12 mb-28 text-2xl text-gray-600'>No Items to show</div> : 
+        (currentOrders.map(order => (
           <OrderItem key={order.id} order={order} />
-        ))}
+        ))) }
       </ul>
 
       <OrderPagination
