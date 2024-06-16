@@ -1,33 +1,13 @@
 "use client";
 import { useState, useEffect } from 'react';
-import Modal from 'react-modal';
 import { data } from '../../data';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-// Modal.setAppElement('#__next');  // Add this line to set the app element for accessibility
-
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    padding: '20px',
-    borderRadius: '8px',
-    maxWidth: '500px',
-    width: '100%',
-    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
-  },
-  overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-};
+import AddItemModal from '@/components/Modals/AddItemModal';
+import EditItemModal from '@/components/Modals/EditItemModal';
+import DeleteItemModal from '@/components/Modals/DeleteItemModal';
+import InventoryItem from '@/components/Inventory/InventoryItems';
+import OrderPagination from '@/components/Orders/OrderPagination';
 
 const InventoryManagement = () => {
   const [items, setItems] = useState([]);
@@ -211,114 +191,56 @@ const InventoryManagement = () => {
       <ul>
         {currentItems.length === 0 ? (<div className='text-center mt-12 mb-28 text-2xl text-gray-600'>No Items to show</div>)
           : (currentItems.map(item => (
-            <li key={item.id} className="mb-4 p-4 border rounded hover:shadow-lg transition-shadow duration-200">
-              <p className="font-medium">Name: {item.name}</p>
-              <p>Stock: {item.stock}</p>
-              <div className="flex gap-2 mt-2">
-                <button onClick={() => openEditModal(item)} className="bg-yellow-500 text-white px-4 py-2 rounded">Edit</button>
-                <button onClick={() => openDeleteModal(item)} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
-              </div>
-            </li>
+            <InventoryItem
+              key={item.id}
+              item={item}
+              onEdit={openEditModal}
+              onDelete={openDeleteModal}
+            />
           )))  
       }
       </ul>
 
       {/* Pagination controls */}
-      <div className="flex justify-center mt-4">
-        <button
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="px-4 py-2 rounded-l bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Previous
-        </button>
-        <span className="px-4 py-2 bg-gray-100">{currentPage} of {totalPages}</span>
-        <button
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 rounded-r bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Next
-        </button>
-      </div>
+      <OrderPagination 
+      currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
+      totalPages={totalPages}
+      />
 
       {/* Modal for adding new item */}
-      <Modal
+
+      <AddItemModal 
         isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-      >
-        <div className="modal-content">
-          <h2 className="text-xl font-bold mb-2">Add New Item</h2>
-          <input
-            type="text"
-            placeholder="Item Name"
-            value={newItemName}
-            onChange={(e) => setNewItemName(e.target.value)}
-            className="border p-2 mb-2 w-full"
-          />
-          {errors.name && <p className="text-red-500 mb-2">{errors.name}</p>}
-          <input
-            type="number"
-            placeholder="Stock"
-            value={newItemStock}
-            onChange={(e) => setNewItemStock(e.target.value)}
-            className="border p-2 mb-2 w-full"
-          />
-          {errors.stock && <p className="text-red-500 mb-2">{errors.stock}</p>}
-          <div className="flex justify-center items-center gap-4 mt-4">
-            <button onClick={addItem} className="bg-green-500 text-white px-4 py-2 rounded">Add Item</button>
-            <button onClick={closeModal} className="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
-          </div>
-        </div>
-      </Modal>
+        closeModal={closeModal}
+        addItem={addItem}
+        newItemName={newItemName}
+        setNewItemName={setNewItemName}
+        newItemStock={newItemStock}
+        setNewItemStock={setNewItemStock}
+        errors={errors}
+      />
 
       {/* Modal for delete confirmation */}
-      <Modal
+
+      <DeleteItemModal
         isOpen={deleteModalIsOpen}
-        onRequestClose={closeDeleteModal}
-        style={customStyles}
-      >
-        <div className="modal-content">
-          <h2 className="text-xl font-bold mb-4">Confirm Deletion</h2>
-          <p>Are you sure you want to delete this item?</p>
-          <div className="flex justify-center items-center gap-4 mt-4">
-            <button onClick={deleteItem} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
-            <button onClick={closeDeleteModal} className="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
-          </div>
-        </div>
-      </Modal>
+        closeModal={closeDeleteModal}
+        deleteItem={deleteItem}
+      />
 
       {/* Modal for editing item */}
-      <Modal
+      <EditItemModal
         isOpen={editModalIsOpen}
-        onRequestClose={closeEditModal}
-        style={customStyles}
-      >
-        <div className="modal-content">
-          <h2 className="text-xl font-bold mb-2">Edit Item</h2>
-          <input
-            type="text"
-            placeholder="Item Name"
-            value={editItemName}
-            onChange={(e) => setEditItemName(e.target.value)}
-            className="border p-2 mb-2 w-full"
-          />
-          {errors.name && <p className="text-red-500 mb-2">{errors.name}</p>}
-          <input
-            type="number"
-            placeholder="Stock"
-            value={editItemStock}
-            onChange={(e) => setEditItemStock(e.target.value)}
-            className="border p-2 mb-2 w-full"
-          />
-          {errors.stock && <p className="text-red-500 mb-2">{errors.stock}</p>}
-          <div className="flex justify-center items-center gap-4 mt-4">
-            <button onClick={editItem} className="bg-green-500 text-white px-4 py-2 rounded">Save Changes</button>
-            <button onClick={closeEditModal} className="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
-          </div>
-        </div>
-      </Modal>
+        closeModal={closeEditModal}
+        editItem={editItem}
+        editItemName={editItemName}
+        setEditItemName={setEditItemName}
+        editItemStock={editItemStock}
+        setEditItemStock={setEditItemStock}
+        errors={errors}
+      />
+
     </div>
   );
 };
