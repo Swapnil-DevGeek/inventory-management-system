@@ -7,21 +7,28 @@ const OrderDetails = ({ params }) => {
   const [order, setOrder] = useState(null);
 
   useEffect(() => {
-    if (id) {
-      const foundOrder = data.orders.find(order => order.id === parseInt(id));
-      setOrder(foundOrder);
+    // Load initial data into local storage if not already present
+    const storedOrders = JSON.parse(localStorage.getItem('orders'));
+    if (!storedOrders || storedOrders.length === 0) {
+      localStorage.setItem('orders', JSON.stringify(data.orders));
     }
+
+    // Retrieve data from local storage
+    const orders = JSON.parse(localStorage.getItem('orders'));
+    const foundOrder = orders.find(order => order.id === parseInt(id));
+    setOrder(foundOrder);
   }, [id]);
 
   if (!order) return <div className="container mx-auto p-4 text-center">Loading...</div>;
 
   const markAsCompleted = () => {
-    // Simulating update in state, assuming data.orders should reflect this change globally
+    // Update the local state
     setOrder({ ...order, status: 'Completed' });
 
-    // Assuming data.orders is updated in actual use case
-    const updatedOrders = data.orders.map(o => o.id === order.id ? { ...o, status: 'Completed' } : o);
-    data.orders = updatedOrders; // Updating the global data (simulated)
+    // Update local storage
+    const orders = JSON.parse(localStorage.getItem('orders'));
+    const updatedOrders = orders.map(o => o.id === order.id ? { ...o, status: 'Completed' } : o);
+    localStorage.setItem('orders', JSON.stringify(updatedOrders));
   };
 
   return (
@@ -38,14 +45,18 @@ const OrderDetails = ({ params }) => {
               <li key={item.id} className="mb-2">
                 <p className="font-medium">Name: {item.name}</p>
                 <p>Quantity: {item.quantity}</p>
-                <p>Stock: {stockItem.stock}</p>
+                <p>Stock: {stockItem?.stock || 'N/A'}</p>
               </li>
             );
           })}
         </ul>
-        {order.status === 'Pending' && (
-          <button onClick={markAsCompleted} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Mark as Completed</button>
-        )}
+        <button
+          onClick={markAsCompleted}
+          className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600 ${order.status === 'Completed' ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={order.status === 'Completed'}
+        >
+          Mark as Completed
+        </button>
       </div>
     </div>
   );

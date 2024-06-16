@@ -1,12 +1,23 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { data } from '../../data';
 
 const OrderList = () => {
   const [statusFilter, setStatusFilter] = useState('All');
   const [sortField, setSortField] = useState('id');
   const [searchTerm, setSearchTerm] = useState('');
-  const [orders, setOrders] = useState(data.orders);
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    // Load initial data into local storage if not already present
+    const storedOrders = JSON.parse(localStorage.getItem('orders'));
+    if (!storedOrders) {
+      localStorage.setItem('orders', JSON.stringify(data.orders));
+      setOrders(data.orders);
+    } else {
+      setOrders(storedOrders);
+    }
+  }, []);
 
   // Function to filter orders based on status and search term
   const filteredOrders = orders.filter(order => {
@@ -23,7 +34,7 @@ const OrderList = () => {
     return a.id - b.id;
   });
 
-  // Pagination logic remains the same as before
+  // Pagination logic
   const ordersPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(sortedOrders.length / ordersPerPage);
@@ -37,8 +48,6 @@ const OrderList = () => {
 
       {/* Search and filter controls */}
       <div className="md:flex items-center mb-4 md:gap-12">
-
-        
         {/* Search input */}
         <div>
           <label className="block w-full text-sm font-medium text-gray-700 mb-1">Search:</label>
@@ -52,7 +61,6 @@ const OrderList = () => {
         </div>
 
         <div className='flex mt-4 md:mt-0 items-center gap-6'>
-
           {/* Status filter dropdown */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Filter by status:</label>
@@ -80,9 +88,7 @@ const OrderList = () => {
               <option value="itemCount">Item Count</option>
             </select>
           </div>
-
         </div>
-
       </div>
 
       {/* List of orders */}
